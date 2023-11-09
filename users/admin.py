@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserAccount,Appointment
+from .models import UserAccount,Appointments,OTP
 
 
 
@@ -7,7 +7,8 @@ from .models import UserAccount,Appointment
 
 admin.site.register(UserAccount)
 
-admin.site.register(Appointment)
+admin.site.register(Appointments)
+admin.site.register(OTP)
 
 
 

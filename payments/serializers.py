@@ -1,9 +1,11 @@
 from rest_framework import serializers;
-from users.models import Appointment
+from .models import Order
 
 
 
-class PaymentSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
+    order_date = serializers.DateTimeField(format="%d %B %Y %I:%M %p")
+
     class Meta:
-        model = Appointment
-        feilds = []
+        model =Order
+        fields = '__all__'

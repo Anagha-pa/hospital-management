@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,9 +46,12 @@ INSTALLED_APPS = [
     'users',
     'adminpanel',
     'payments',
+    'doctors',
+    'chats',
 ]
 
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,6 +84,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'base.wsgi.application'
+ASGI_APPLICATION = "base.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 
 
 # Database
@@ -145,17 +158,25 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
 
 }
 
 SIMPLE_JWT = {
 
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=200),
     "REFRESH_TOKEN_LIFETIME": timedelta(days= 90),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-     "TOKEN_OBTAIN_SERIALIZER": "users.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.MyTokenObtainPairSerializer",
 }
 
 AUTH_USER_MODEL ='users.UserAccount'
@@ -166,8 +187,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'anaghaponnore2000@gmail.com'  # Replace with your Gmail email address
-EMAIL_HOST_PASSWORD = 'olxwfvorfzwvlwom'
+EMAIL_HOST_USER = 'anaghaponnore2000@gmail.com' 
+EMAIL_HOST_PASSWORD = 'divl klft yhwx pnkf'
 
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -175,3 +196,11 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 OTP_SETTINGS = {
     'otp': None,
 }
+
+
+PUBLIC_KEY="rzp_test_9RhG4sj0W6f0y8"
+SECRET_KEY="coXrt35SA1FFiYxNWpvCj230"   
+
+
+
+

@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import UserAccount,Appointment
+from .models import UserAccount,Appointments
 
 from adminpanel.models import Departments, Doctor
 from adminpanel.serializers import DoctorSerializer
@@ -25,6 +25,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_active'] = user.is_active
         token['is_staff'] = user.is_staff
         token['email'] = user.email
+        token['is_doctor'] = user.is_doctor
         
         # ...
 
@@ -81,7 +82,10 @@ class OTPVerificationSerializer(serializers.Serializer):
       if not otp:
         raise serializers.ValidationError('OTP is required')
       return data
-      
+
+
+class ResendOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -101,31 +105,32 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
    
    class Meta:
-      model = Appointment
+      model = Appointments
       fields = '__all__'
-
-
-  #  def create(self, validated_data):
-  #     doctor_name = validated_data.pop('doctor')
-  #     doctor = Doctor.objects.get(name=doctor_name)
-  #     appointment = Appointment.objects.create(doctor=doctor, **validated_data)      
-  #     appointment.save()
-    
-      
-  #     # department = Departments.objects.filter(name = department_name)
-  #     # fee = department.fee
-  #     return appointment
-
 
 
 
 class ListAppointments(serializers.ModelSerializer):
+   doctor_name = serializers.CharField(source="doctor.name",read_only = True)
    class Meta:
-      model = Appointment
-      fields = ['first_name','last_name','age','gender','slot_date','department','doctor','fee']
+      model = Appointments
+      fields = ['id','first_name','last_name','age','gender','slot_date','department','doctor','fee','doctor_name','status','time']
 
 
 class AppointmentHistorySerializer(serializers.ModelSerializer):
+    doctor_name = serializers.CharField(source="doctor.name",read_only = True)
     class Meta:
-       model = Appointment
-       fields = ['first_name','last_name','age','gender','slot_date','department','doctor','fee','payment_status']
+       model = Appointments
+       fields = ['first_name','last_name','age','gender','slot_date','department','doctor','fee','payment_status', 'doctor_name']
+
+
+class DoctorViewSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = Doctor
+      fields = ['id','name','qualification','department','available']      
+
+
+class SingleDoctorSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = Doctor
+      fields = "__all__"      
